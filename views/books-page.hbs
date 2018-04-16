@@ -1,0 +1,11 @@
+<h2>Books List</h2>
+
+<ul>
+  {{#each bookList}}
+    <li>
+      <h3>{{this.title}}</h3>
+      <p>by {{this.author}}</p>
+      <a href="/book/{{this._id}}">See Details</a>
+    </li>
+  {{/each}}
+</ul>
