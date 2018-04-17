@@ -1,6 +1,33 @@
 <h2>{{book.title}}</h2>
-<p>by {{book.author}}</p>
+<p>by {{book.author.name}} {{book.author.lastName}}</p>
+<img src="{{book.author.pictureUrl}}" />
 <p>{{book.description}}</p>
 
 <p>Added on {{book.createdAt}}</p>
 <p>Rated {{book.rating}} / 10</p>
+
+<hr />
+
+<h3>Reviews</h3>
+
+<h4>Add a Review </h4>
+
+<form action="/book/{{book._id}}/process-review" method="POST">
+  <input type="text" name="user" placeholder="Your name..." />
+  <br />
+  <input type="text" name="comments" placeholder="Comments..." />
+  <br />
+
+  <button>Submit Review</button>
+</form>
+
+<ul>
+  {{#each book.reviews}}
+    <li>
+      <p>{{this.user}} says:</p>
+      <p>"{{this.comments}}"</p>
+    </li>
+  {{else}}
+    <p>No reviews yet. Write one!</p>
+  {{/each}}
+</ul>

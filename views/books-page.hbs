@@ -6,7 +6,7 @@
   {{#each bookList}}
     <li>
       <h3>{{this.title}}</h3>
-      <p>by {{this.author}}</p>
+      <p>by {{this.author.name}} {{this.author.lastName}}</p>
       <a href="/book/{{this._id}}">See Details</a>
       <a href="/book/{{this._id}}/edit">Edit</a>
       <a href="/book/{{this._id}}/delete">Delete</a>

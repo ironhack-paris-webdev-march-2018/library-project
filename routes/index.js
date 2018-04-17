@@ -1,6 +1,7 @@
 const express = require('express');
 
 const Book = require('../models/book-model');
+const Author = require('../models/author-model');
 
 const router  = express.Router();
 
@@ -15,6 +16,7 @@ router.get('/about', (req, res, next) => {
 
 router.get('/books', (req, res, next) => {
   Book.find()
+    .populate('author')
     .then((booksFromDb) => {
       // send the database results to the view
       res.locals.bookList = booksFromDb;
@@ -81,6 +83,7 @@ router.post('/process-edit/:bookId', (req, res, next) => {
 
 router.get('/book/:bookId', (req, res, next) => {
   Book.findById(req.params.bookId)
+    .populate('author')
     .then((bookDetails) => {
       res.locals.book = bookDetails;
       res.render('single-book-page');
@@ -99,6 +102,40 @@ router.get('/book/:bookId/delete', (req, res, next) => {
     .catch((err) => {
       next(err);
     });
+});
+
+router.get('/author/add', (req, res, next) => {
+  res.render('author-form');
+});
+
+router.post('/process-author', (req, res, next) => {
+  const { name, lastName, nationality, birthday, pictureUrl } = req.body;
+
+  Author.create({ name, lastName, nationality, birthday, pictureUrl })
+    .then(() => {
+      res.redirect('/');
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+router.post('/book/:bookId/process-review', (req, res, next) => {
+  const { user, comments } = req.body;
+
+  Book.findByIdAndUpdate(
+    req.params.bookId,
+    {  // push to the "reviews" array
+      $push: { reviews: { user, comments } }
+    },
+    { runValidators: true }
+  )
+  .then(() => {
+    res.redirect(`/book/${req.params.bookId}`);
+  })
+  .catch((err) => {
+    next(err);
+  });
 });
 
 module.exports = router;

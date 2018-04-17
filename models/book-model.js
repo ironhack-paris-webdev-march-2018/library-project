@@ -5,8 +5,18 @@ const Schema = mongoose.Schema;
 const bookSchema = new Schema({
   title: { required: true, type: String },
   description: { type: String },
-  author: { type: String, default: "Anonymous" },
-  rating: { type: Number }
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: "Author", // this id connects to the Author model
+    required: true
+  },
+  rating: { type: Number },
+  reviews: [
+    {
+      user: { type: String, required: true },
+      comments: { type: String, required: true }
+    }
+  ]
 }, {
   timestamps: true
 });
