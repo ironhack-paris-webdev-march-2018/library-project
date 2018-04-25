@@ -4,10 +4,20 @@
 <form action="/process-edit/{{bookId}}" method="POST">
   <input type="text" name="title" value="{{book.title}}" placeholder="Title..." />
   <br />
-  <input type="text" name="author" value="{{book.author}}" placeholder="Author..." />
+
+  <select name="author">
+    <option value="">Select an author...</option>
+    {{#each authorList}}
+      <option value="{{this._id}}" {{selected this._id ../book.author}}>
+        {{this.name}} {{this.lastName}}
+      </option>
+    {{/each}}
+  </select>
   <br />
+
   <input type="text" name="description" value="{{book.description}}" placeholder="Description..." />
   <br />
+
   <input type="number" name="rating" value="{{book.rating}}" placeholder="Rating (1-10)" />
   <br />
 

@@ -30,7 +30,14 @@ router.get('/books', (req, res, next) => {
 
 // STEP #1 of CREATE form (show the form)
 router.get('/book/add', (req, res, next) => {
-  res.render('book-form');
+  Author.find()
+    .then((authorsFromDb) => {
+      res.locals.authorList = authorsFromDb;
+      res.render('book-form');
+    })
+    .catch((err) => {
+      next(err);
+    })
 });
 
 // STEP #5 of CREATE form (server processes)
@@ -52,15 +59,19 @@ router.post('/process-book', (req, res, next) => {
 
 // STEP #1 of UPDATE form (show the form)
 router.get('/book/:bookId/edit', (req, res, next) => {
-  Book.findById(req.params.bookId)
-    .then((bookDetails) => {
-      res.locals.bookId = req.params.bookId;
-      res.locals.book = bookDetails;
-      res.render('book-edit');
-    })
-    .catch((err) => {
-      next(err);
-    });
+  Promise.all([
+    Book.findById(req.params.bookId),
+    Author.find()
+  ])
+  .then((results) => {
+    res.locals.bookId = req.params.bookId;
+    res.locals.book = results[0];
+    res.locals.authorList = results[1];
+    res.render('book-edit');
+  })
+  .catch((err) => {
+    next(err);
+  });
 });
 
 // STEP #5 of UPDATE form (server processes)

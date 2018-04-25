@@ -4,10 +4,20 @@
 <form action="/process-book" method="POST">
   <input type="text" name="title" placeholder="Title..." />
   <br />
-  <input type="text" name="author" placeholder="Author..." />
+
+  <select name="author">
+    <option value="">Select an author...</option>
+    {{#each authorList}}
+      <option value="{{this._id}}">
+        {{this.name}} {{this.lastName}}
+      </option>
+    {{/each}}
+  </select>
   <br />
+
   <input type="text" name="description" placeholder="Description..." />
   <br />
+
   <input type="number" name="rating" placeholder="Rating (1-10)" />
   <br />
 
